@@ -1,4 +1,3 @@
-// Root build.gradle.kts
 buildscript {
     repositories {
         google()
@@ -7,8 +6,8 @@ buildscript {
     }
     dependencies {
         classpath("com.github.recloudstream:gradle:-SNAPSHOT")
-        classpath("com.android.tools.build:gradle:8.7.3")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.21")
+        classpath("com.android.tools.build:gradle:8.2.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10")
     }
 }
 
