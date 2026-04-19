@@ -25,9 +25,9 @@ fun Project.android(configuration: BaseExtension.() -> Unit) =
 
 cloudstream {
     // Update to your own repo URL if you fork/publish this
-    setRepo("https://github.com/SubCoder/JioTVProvider")
+    setRepo("https://github.com/Subrata96411/JioTVProvider")
 
-    authors = listOf("SubCoder")
+    authors = listOf("Subrata96411")
     description = "Watch JioTV live channels in CloudStream. Requires a Jio mobile number for OTP login."
     language = "all"
     status = 1 // 1 = Working
