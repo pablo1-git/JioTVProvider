@@ -31,11 +31,10 @@ jobs:
 
       # ── 4. Build the plugin ───────────────────────────────────────────────
       - name: Grant execute permission for gradlew
-        run: chmod +x JioTVProvider/gradlew
+        run: chmod +x gradlew
 
       - name: Build JioTV plugin (.cs3)
         run: ./gradlew JioTVProvider:make
-        working-directory: JioTVProvider
 
       # ── 5. Prepare the builds branch content ─────────────────────────────
       - name: Prepare build output directory
