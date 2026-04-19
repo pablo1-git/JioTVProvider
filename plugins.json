@@ -1,0 +1,16 @@
+[
+  {
+    "url": "__PLUGIN_URL__",
+    "apiVersion": 4,
+    "version": 1,
+    "iconUrl": "https://jiotv.catchup.cdn.jio.com/apis/v1.3/fetchChannelLogos/get/?channel_id=1",
+    "name": "JioTV",
+    "internalName": "JioTVProvider",
+    "authors": ["YourName"],
+    "description": "Watch JioTV live channels. Requires a Jio mobile number for OTP login.",
+    "repositoryUrl": "__REPO_URL__",
+    "language": "all",
+    "tvTypes": ["Live"],
+    "status": 1
+  }
+]

@@ -1,0 +1,99 @@
+name: Build and Publish CloudStream Plugin
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to push to the builds branch
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout code ─────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Set up Java ────────────────────────────────────────────────────
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      # ── 3. Set up Android SDK ─────────────────────────────────────────────
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      # ── 4. Build the plugin ───────────────────────────────────────────────
+      - name: Grant execute permission for gradlew
+        run: chmod +x JioTVProvider/gradlew
+
+      - name: Build JioTV plugin (.cs3)
+        run: ./gradlew JioTVProvider:make
+        working-directory: JioTVProvider
+
+      # ── 5. Prepare the builds branch content ─────────────────────────────
+      - name: Prepare build output directory
+        run: |
+          mkdir -p builds
+          # Copy the compiled .cs3 into the builds folder
+          cs3_file=$(find JioTVProvider -name "*.cs3" | head -n 1)
+          echo "Found plugin file: $cs3_file"
+          cp "$cs3_file" builds/JioTVProvider.cs3
+          echo "Copied to builds/"
+
+      - name: Generate plugins.json
+        run: |
+          REPO_URL="https://github.com/${{ github.repository }}"
+          PLUGIN_URL="https://raw.githubusercontent.com/${{ github.repository }}/builds/JioTVProvider.cs3"
+
+          cat > builds/plugins.json << EOF
+          [
+            {
+              "url": "${PLUGIN_URL}",
+              "apiVersion": 4,
+              "version": 1,
+              "iconUrl": "https://jiotv.catchup.cdn.jio.com/apis/v1.3/fetchChannelLogos/get/?channel_id=1",
+              "name": "JioTV",
+              "internalName": "JioTVProvider",
+              "authors": ["YourName"],
+              "description": "Watch JioTV live channels. Requires Jio OTP login.",
+              "repositoryUrl": "${REPO_URL}",
+              "language": "all",
+              "tvTypes": ["Live"],
+              "status": 1
+            }
+          ]
+          EOF
+
+          echo "Generated plugins.json:"
+          cat builds/plugins.json
+
+      # ── 6. Push to the `builds` branch ────────────────────────────────────
+      - name: Deploy to builds branch
+        run: |
+          cd builds
+          git init
+          git config user.name  "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Build: ${{ github.sha }}"
+          git push --force \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" \
+            HEAD:builds
+
+      # ── 7. Print the Repository URL ────────────────────────────────────────
+      - name: Print Repository URL for CloudStream
+        run: |
+          echo ""
+          echo "==========================================="
+          echo "  CloudStream Repository URL:"
+          echo "  https://raw.githubusercontent.com/${{ github.repository }}/builds/"
+          echo "==========================================="
+          echo ""
+          echo "Add this URL in CloudStream → Settings → Extensions → Add Repository"
