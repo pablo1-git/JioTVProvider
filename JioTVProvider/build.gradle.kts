@@ -8,7 +8,7 @@ buildscript {
         maven("https://jitpack.io")
     }
     dependencies {
-        classpath("com.github.recloudstream:gradle:pre-release-SNAPSHOT")
+        classpath("com.github.recloudstream:gradle:master-SNAPSHOT")
         classpath("com.android.tools.build:gradle:8.2.2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10")
     }
@@ -49,5 +49,5 @@ android {
 
 dependencies {
     val cloudstream by configurations
-    cloudstream("com.github.recloudstream.cloudstream:library:pre-release-SNAPSHOT")
+    cloudstream("com.github.recloudstream.cloudstream:library:v4.7.0")
 }
